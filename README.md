@@ -2,7 +2,7 @@
 
 Solutions for [Advent of Code 2022](https://adventofcode.com/)
 
-## Day Checklist
+### Day Checklist
 
 :x: Day 1\
 :x: Day 2\
@@ -29,3 +29,11 @@ Solutions for [Advent of Code 2022](https://adventofcode.com/)
 :x: Day 23\
 :x: Day 24\
 :x: Day 25
+
+### Generate Template
+
+`$NAME` refers to the cargo package for the day (`day-1`, `day-2`, etc)
+
+```
+cargo new solutions/$NAME && touch solutions/$NAME/input.txt
+```
