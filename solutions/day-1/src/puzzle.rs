@@ -27,14 +27,14 @@ fn parse_file_content_into_vec(file_path: &str) -> Result<Vec<i32>, Box<dyn Erro
     Ok(elf_calories)
 }
 
-// Find max calories
+/// Find max calories
 pub(super) fn puzzle_1_solution(file_path: &str) -> Result<i32, Box<dyn Error>> {
     let elf_calories = parse_file_content_into_vec(file_path)?;
     let max_calories = elf_calories.iter().max().unwrap();
     Ok(*max_calories)
 }
 
-// Find top 3 largest calories and sum them
+/// Find top 3 largest calories and sum them
 pub(super) fn puzzle_2_solution(file_path: &str) -> Result<i32, Box<dyn Error>> {
     let mut elf_calories = parse_file_content_into_vec(file_path)?;
     elf_calories.sort_by(|a, b| b.cmp(a));
