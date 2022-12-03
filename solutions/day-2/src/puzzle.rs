@@ -93,7 +93,7 @@ fn map_choices_to_variant(round: &str) -> Result<Round, Box<dyn Error>> {
 fn parse_file_content(file_path: &str) -> Result<Vec<Round>, Box<dyn Error>> {
     let input = fs::read_to_string(file_path)?;
     let rounds = input
-        .split("\n")
+        .lines()
         .map(|round| map_choices_to_variant(round).unwrap())
         .collect::<Vec<Round>>();
     Ok(rounds)
