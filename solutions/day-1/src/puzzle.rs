@@ -1,28 +1,16 @@
-use std::{
-    error::Error,
-    fs::File,
-    io::{BufRead, BufReader},
-};
+use std::{error::Error, fs};
 
 fn parse_file_content_into_vec(file_path: &str) -> Result<Vec<i32>, Box<dyn Error>> {
-    let file = File::open(file_path)?;
-    let reader = BufReader::new(file);
+    let input = fs::read_to_string(file_path)?;
 
-    let mut elf_calories = Vec::new();
-    let mut current_calories = 0;
-
-    for line in reader.lines() {
-        let line = line?;
-        let calories = line.trim();
-
-        if calories != "" {
-            current_calories += calories.parse::<i32>()?;
-        } else {
-            elf_calories.push(current_calories);
-            current_calories = 0;
-        }
-    }
-    elf_calories.push(current_calories);
+    let elf_calories = input
+        .split("\n\n")
+        .map(|group_calories| {
+            group_calories
+                .split("\n")
+                .fold(0, |acc, calories| acc + calories.parse::<i32>().unwrap())
+        })
+        .collect::<Vec<i32>>();
 
     Ok(elf_calories)
 }
@@ -38,10 +26,7 @@ pub(super) fn puzzle_1_solution(file_path: &str) -> Result<i32, Box<dyn Error>> 
 pub(super) fn puzzle_2_solution(file_path: &str) -> Result<i32, Box<dyn Error>> {
     let mut elf_calories = parse_file_content_into_vec(file_path)?;
     elf_calories.sort_by(|a, b| b.cmp(a));
-    let total_calories = elf_calories
-        .iter()
-        .take(3)
-        .fold(0, |acc, calories| acc + *calories);
+    let total_calories = elf_calories.iter().take(3).sum();
     Ok(total_calories)
 }
 
