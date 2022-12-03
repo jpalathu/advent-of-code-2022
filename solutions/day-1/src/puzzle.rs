@@ -36,13 +36,13 @@ mod tests {
 
     #[test]
     fn test_puzzle_1() {
-        let max_calories = puzzle_1_solution("./input/sample-puzzle-input.txt").unwrap();
-        assert_eq!(max_calories, 24000);
+        let solution = puzzle_1_solution("./input/sample-puzzle-input.txt").unwrap();
+        assert_eq!(solution, 24000);
     }
 
     #[test]
     fn test_puzzle_2() {
-        let total_calories = puzzle_2_solution("./input/sample-puzzle-input.txt").unwrap();
-        assert_eq!(total_calories, 45000);
+        let solution = puzzle_2_solution("./input/sample-puzzle-input.txt").unwrap();
+        assert_eq!(solution, 45000);
     }
 }

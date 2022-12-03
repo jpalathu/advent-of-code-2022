@@ -48,14 +48,14 @@ mod tests {
 
     #[test]
     fn test_puzzle_1() {
-        let answer = puzzle_1_solution("./input/sample-puzzle-input.txt").unwrap();
-        assert_eq!(answer, 0);
+        let solution = puzzle_1_solution("./input/sample-puzzle-input.txt").unwrap();
+        assert_eq!(solution, 0);
     }
 
     #[test]
     fn test_puzzle_2() {
-        let answer = puzzle_2_solution("./input/sample-puzzle-input.txt").unwrap();
-        assert_eq!(answer, 0);
+        let solution = puzzle_2_solution("./input/sample-puzzle-input.txt").unwrap();
+        assert_eq!(solution, 0);
     }
 }
 EOF
