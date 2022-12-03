@@ -6,7 +6,7 @@ Solutions for [Advent of Code 2022](https://adventofcode.com/)
 
 :white_check_mark: Day 1\
 :white_check_mark: Day 2\
-:x: Day 3\
+:white_check_mark: Day 3\
 :x: Day 4\
 :x: Day 5\
 :x: Day 6\

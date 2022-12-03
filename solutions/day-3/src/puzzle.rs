@@ -4,44 +4,10 @@ const UPPERCASE_CHAR_CODE: usize = 65;
 const LOWERCASE_CHAR_CODE: usize = 97;
 const POSSIBLE_ITEMS_LENGTH: usize = 52;
 
-#[derive(Debug)]
-struct Rucksack {
-    first_compartment: String,
-    second_compartment: String,
-}
-impl Rucksack {
-    fn from_str(rucksack: &str) -> Self {
-        let (first_compartment, second_compartment) = rucksack.split_at(rucksack.len() / 2);
-        Self {
-            first_compartment: first_compartment.to_owned(),
-            second_compartment: second_compartment.to_owned(),
-        }
-    }
-
-    fn find_compartment_common_item_priority(&self) -> usize {
-        let mut item_counts = [0; POSSIBLE_ITEMS_LENGTH];
-
-        let (shorter_compartment, longer_compartment) =
-            if self.first_compartment.len() < self.second_compartment.len() {
-                (&self.first_compartment, &self.second_compartment)
-            } else {
-                (&self.second_compartment, &self.first_compartment)
-            };
-
-        for c in shorter_compartment.chars() {
-            item_counts[get_item_index(c)] += 1;
-        }
-
-        for c in longer_compartment.chars() {
-            let index = get_item_index(c);
-            if item_counts[index] != 0 {
-                // The priority starts at 1 instead of 0
-                return index + 1;
-            }
-        }
-
-        panic!("no common item found");
-    }
+fn parse_file_content(file_path: &str) -> Result<Vec<String>, Box<dyn Error>> {
+    let input = fs::read_to_string(file_path)?;
+    let rucksacks = input.lines().map(String::from).collect::<Vec<String>>();
+    Ok(rucksacks)
 }
 
 fn get_item_index(c: char) -> usize {
@@ -52,28 +18,84 @@ fn get_item_index(c: char) -> usize {
     }
 }
 
-fn parse_file_content(file_path: &str) -> Result<Vec<Rucksack>, Box<dyn Error>> {
-    let input = fs::read_to_string(file_path)?;
-    let rucksacks = input
-        .lines()
-        .map(Rucksack::from_str)
-        .collect::<Vec<Rucksack>>();
-    Ok(rucksacks)
+fn find_compartment_common_item_priority(rucksack: &str) -> usize {
+    let mut item_counts = [0; POSSIBLE_ITEMS_LENGTH];
+
+    let (first_compartment, second_compartment) = rucksack.split_at(rucksack.len() / 2);
+
+    let (shorter_compartment, longer_compartment) =
+        if first_compartment.len() < second_compartment.len() {
+            (first_compartment, second_compartment)
+        } else {
+            (second_compartment, first_compartment)
+        };
+
+    for c in shorter_compartment.chars() {
+        item_counts[get_item_index(c)] += 1;
+    }
+
+    for c in longer_compartment.chars() {
+        let index = get_item_index(c);
+        if item_counts[index] > 0 {
+            // The priority starts at 1 instead of 0
+            return index + 1;
+        }
+    }
+
+    panic!("no common item found");
 }
 
-/// Sum priority of common item between knapsack compartments
+fn find_group_common_item_priority(group: &[String]) -> usize {
+    let mut item_counts = [0; POSSIBLE_ITEMS_LENGTH];
+
+    let (first_rucksack, second_rucksack, third_rucksack) = (
+        group[0].to_owned(),
+        group[1].to_owned(),
+        group[2].to_owned(),
+    );
+
+    for c in first_rucksack.chars() {
+        let index = get_item_index(c);
+        if item_counts[index] == 0 {
+            item_counts[index] += 1;
+        }
+    }
+
+    for c in second_rucksack.chars() {
+        let index = get_item_index(c);
+        if item_counts[index] == 1 {
+            item_counts[index] += 1;
+        }
+    }
+
+    for c in third_rucksack.chars() {
+        let index = get_item_index(c);
+        if item_counts[index] == 2 {
+            return index + 1;
+        }
+    }
+
+    panic!("no common item found");
+}
+
+/// Sum priority of common item between rucksacks compartments
 pub(super) fn puzzle_1_solution(file_path: &str) -> Result<usize, Box<dyn Error>> {
     let rucksacks = parse_file_content(file_path)?;
     let total = rucksacks
         .iter()
-        .map(|rucksack| rucksack.find_compartment_common_item_priority())
+        .map(|rucksack| find_compartment_common_item_priority(rucksack))
         .sum();
     Ok(total)
 }
 
-/// TODO: Explain problem
-pub(super) fn puzzle_2_solution(file_path: &str) -> Result<i32, Box<dyn Error>> {
-    Ok(0)
+/// Sum priority of common item found in group of 3 rucksacks
+pub(super) fn puzzle_2_solution(file_path: &str) -> Result<usize, Box<dyn Error>> {
+    let rucksacks = parse_file_content(file_path)?;
+    let total = rucksacks
+        .chunks(3)
+        .map(|group| find_group_common_item_priority(group))
+        .fold(0, |acc, priority| acc + priority);
+    Ok(total)
 }
 
 #[cfg(test)]
@@ -89,6 +111,6 @@ mod tests {
     #[test]
     fn test_puzzle_2() {
         let solution = puzzle_2_solution("./input/sample-puzzle-input.txt").unwrap();
-        assert_eq!(solution, 0);
+        assert_eq!(solution, 70);
     }
 }
