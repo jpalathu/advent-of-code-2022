@@ -49,9 +49,9 @@ fn find_group_common_item_priority(group: &[String]) -> usize {
     let mut item_counts = [0; POSSIBLE_ITEMS_LENGTH];
 
     let (first_rucksack, second_rucksack, third_rucksack) = (
-        group[0].to_owned(),
-        group[1].to_owned(),
-        group[2].to_owned(),
+        group.get(0).unwrap(),
+        group.get(1).unwrap(),
+        group.get(2).unwrap(),
     );
 
     for c in first_rucksack.chars() {
