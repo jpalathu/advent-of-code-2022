@@ -19,15 +19,11 @@ EOF
 read -d '' PUZZLE << EOF
 use std::{
     error::Error,
-    fs::File,
-    io::{BufRead, BufReader},
+    fs,
 };
 
 fn parse_file_content(file_path: &str) -> Result<(), Box<dyn Error>> {
-    let file = File::open(file_path)?;
-    let reader = BufReader::new(file);
-
-    for line in reader.lines() {}
+    let input = fs::read_to_string(file_path)?;
 
     Ok(())
 }
