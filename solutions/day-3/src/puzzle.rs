@@ -64,6 +64,7 @@ fn find_group_common_item_priority(group: &[String]) -> usize {
     for c in third_rucksack.chars() {
         let index = get_item_index(c);
         if item_counts[index] == 2 {
+            // The priority starts at 1 instead of 0
             return index + 1;
         }
     }
