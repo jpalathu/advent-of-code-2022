@@ -23,18 +23,11 @@ fn find_compartment_common_item_priority(rucksack: &str) -> usize {
 
     let (first_compartment, second_compartment) = rucksack.split_at(rucksack.len() / 2);
 
-    let (shorter_compartment, longer_compartment) =
-        if first_compartment.len() < second_compartment.len() {
-            (first_compartment, second_compartment)
-        } else {
-            (second_compartment, first_compartment)
-        };
-
-    for c in shorter_compartment.chars() {
+    for c in first_compartment.chars() {
         item_counts[get_item_index(c)] += 1;
     }
 
-    for c in longer_compartment.chars() {
+    for c in second_compartment.chars() {
         let index = get_item_index(c);
         if item_counts[index] > 0 {
             // The priority starts at 1 instead of 0
